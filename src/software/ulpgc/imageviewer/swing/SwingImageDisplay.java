@@ -2,11 +2,15 @@ package software.ulpgc.imageviewer.swing;
 
 import software.ulpgc.imageviewer.ImageDisplay;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +20,25 @@ public class SwingImageDisplay extends JPanel implements ImageDisplay {
     private Released released = Released.Null;
     private int initShift;
     private List<Paint> paints = new ArrayList<>();
+    private JButton prevButton;
+    private JButton nextButton;
 
     public SwingImageDisplay() {
         this.addMouseListener(mouseListener());
         this.addMouseMotionListener(mouseMotionListener());
+
+        prevButton = new JButton("<");
+        nextButton = new JButton(">");
+        prevButton.addActionListener(e -> released.offset(-getWidth() / 2));
+        nextButton.addActionListener(e -> released.offset(getWidth() / 2));
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 2));
+        buttonPanel.add(prevButton);
+        buttonPanel.add(nextButton);
+
+        this.setLayout(new BorderLayout());
+        this.add(buttonPanel, BorderLayout.SOUTH);
     }
 
     private MouseListener mouseListener() {
@@ -75,9 +94,14 @@ public class SwingImageDisplay extends JPanel implements ImageDisplay {
     );
     @Override
     public void paint(Graphics g) {
+        // Elimina el código anterior y usa ImageIO para cargar y mostrar las imágenes
         for (Paint paint : paints) {
-            g.setColor(colors.get(paint.id));
-            g.fillRect(paint.offset, 0, 800, 600);
+            try {
+                BufferedImage image = ImageIO.read(new File("images/" + paint.id + ".jpg"));
+                g.drawImage(image, paint.offset, 0, this);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
