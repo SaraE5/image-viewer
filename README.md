@@ -1,3 +1,6 @@
+# Image Viewer Project
+Este proyecto implementa un visor de imágenes en Java con interfaz gráfica de usuario (GUI). Permite visualizar imágenes y navegar entre ellas mediante clics y arrastres en la ventana ó botones en la parte inferior que aparecen con el cursor encima.
+
 ### Estructura del Proyecto
 
 El proyecto está organizado en paquetes que representan diferentes capas de la aplicación:
